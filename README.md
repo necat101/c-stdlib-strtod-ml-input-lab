@@ -31,7 +31,7 @@ Thread 24436158 was read via:
 hackernews get-item --id 24436158
 ```
 
-using the bundled real Hacker News CLI (`/usr/lib/node_modules/openclaw/dist/extensions/hackernews/skills/hackernews/hackernews`).
+using the bundled Hacker News CLI (`hackernews get-item --id 24436158`).
 
 Relevant public evidence captured in `hn_thread_evidence.md` and `hn_comments_sanitized.json` before preparing the sentiment summary.
 

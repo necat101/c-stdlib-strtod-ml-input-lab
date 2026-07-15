@@ -19,21 +19,24 @@ Classification totals:
 - not_applicable: 59
 - fail: 0
 
-no_conversion consumed: False
+no_conversion endptr_offset: 0
 whitespace_and_sign value: -12.5
-decimal_fraction: 0.125
-decimal_exponent: 0.0625
+decimal_fraction value: 0.125
+decimal_exponent value: 0.0625
 trailing_junk suffix: ms
 overflow isinf: True
-underflow is_zero: True
+underflow isfinite: True
 negative_zero signbit: 1
 infinity isinf: True
 nan isnan: True
-hex_float equals_3: True
-c_locale_radix dot_offset: 3, comma_offset: 1
+hex_float value: 3
+c_locale_radix endptr_offset: 3
 roundtrip items: 5
-vector_token: [0.25, -1.5, 2, 0]
+vector_token count: 4
+bounded_probability policy_accepted: True
+quantization_scale policy_accepted: True
+fixed_inference_config policy: fixed_inference
 
-elapsed: 0.208s
+elapsed: 0.318s
 
-Narrow conclusion: local libc strtod correctness observed; no ML validation.
+Narrow conclusion: local libc strtod/strtof/strtold correctness observed; no ML validation.
