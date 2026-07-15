@@ -71,6 +71,17 @@ See `no_global_parse_or_ml_validity_claim_marker` case for full list of non-clai
 
 ## Build
 
+Linux / macOS:
+```sh
+./run_lab.sh
+```
+
+Windows:
+```bat
+run_lab.bat
+```
+
+Or manually:
 ```sh
 $ZIG_BIN cc -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror parse_lab.c -o parse_lab
 python3 run_lab.py

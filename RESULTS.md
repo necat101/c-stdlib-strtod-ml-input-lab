@@ -37,6 +37,6 @@ bounded_probability policy_accepted: True
 quantization_scale policy_accepted: True
 fixed_inference_config policy: fixed_inference
 
-elapsed: 0.318s
+elapsed: 0.380s
 
 Narrow conclusion: local libc strtod/strtof/strtold correctness observed; no ML validation.

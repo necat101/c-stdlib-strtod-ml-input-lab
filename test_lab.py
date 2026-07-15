@@ -244,7 +244,7 @@ class TestLab(unittest.TestCase):
                 self.assertEqual(parsed, json_row["parsed_vector"])
 
     def test_artifact_scanner(self):
-        required = ["README.md","RESULTS.md","cases.json","results_rows.json","results_rows.csv","parse_lab.c","run_lab.py","test_lab.py","hn_thread_evidence.md","hn_comments_sanitized.json",".gitignore"]
+        required = ["README.md","RESULTS.md","cases.json","results_rows.json","results_rows.csv","parse_lab.c","run_lab.py","test_lab.py","run_lab.sh","run_lab.bat","hn_thread_evidence.md","hn_comments_sanitized.json",".gitignore"]
         for name in required:
             p = ROOT/name
             self.assertTrue(p.exists(), name)
