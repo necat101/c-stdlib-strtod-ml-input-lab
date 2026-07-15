@@ -63,10 +63,42 @@ int main(void) {
 #endif
     printf("\"dbl_min\":%.17e,\n", DBL_MIN);
     printf("\"dbl_max\":%.17e,\n", DBL_MAX);
+    printf("\"flt_min\":%.9e,\n", FLT_MIN);
+    printf("\"flt_max\":%.9e,\n", FLT_MAX);
     printf("\"locale_radix\":");
     print_esc(radix ? radix : "?");
     printf(",\n");
     printf("\"set_c_ok\":%s,\n", set_c_ok ? "true" : "false");
+
+    /* --- strtof / strtod / strtold API marker --- */
+    {
+        float  (*pf_strtof)(const char *, char **) = strtof;
+        double (*pf_strtod)(const char *, char **) = strtod;
+        long double (*pf_strtold)(const char *, char **) = strtold;
+        char* (*pf_setlocale)(int, const char*) = NULL;
+        struct lconv* (*pf_localeconv)(void) = NULL;
+        /* assign to suppress unused warnings */
+        pf_setlocale = setlocale;
+        pf_localeconv = localeconv;
+        /* exercise all three */
+        const char *t = "1.5";
+        errno = 0; char *e1=NULL; float fv = pf_strtof(t, &e1);
+        errno = 0; char *e2=NULL; double dv = pf_strtod(t, &e2);
+        errno = 0; char *e3=NULL; long double ldv = pf_strtold(t, &e3);
+        printf("\"c_numeric_api\":{");
+        printf("\"strtof_available\":true,");
+        printf("\"strtod_available\":true,");
+        printf("\"strtold_available\":true,");
+        printf("\"test_input\":");
+        print_esc(t);
+        printf(",");
+        printf("\"strtof_result\":%.9g,", (double)fv);
+        printf("\"strtod_result\":%.17g,", dv);
+        printf("\"strtold_result\":%.21Lg,", ldv);
+        printf("\"setlocale_available\":%s,", pf_setlocale ? "true":"false");
+        printf("\"localeconv_available\":%s", pf_localeconv ? "true":"false");
+        printf("},\n");
+    }
 
     /* no_conversion */
     {
@@ -129,20 +161,25 @@ int main(void) {
         const char *s = "1e9999";
         errno=0; char *end=NULL; double v=strtod(s,&end);
         size_t off = end ? (size_t)(end-s):0;
+        int err = errno;
         printf("\"overflow\":{\"input\":");
         print_esc(s);
-        printf(",\"value\":%.17g,\"endptr_offset\":%zu,\"errno\":%d,\"isinf\":%s,\"signbit\":%d},\n",
-            v, off, errno, isinf(v)?"true":"false", signbit(v));
+        printf(",\"value\":");
+        if (isinf(v)) printf("\"inf\"");
+        else printf("%.17g", v);
+        printf(",\"endptr_offset\":%zu,\"errno\":%d,\"isinf\":%s,\"signbit\":%d},\n",
+            off, err, isinf(v)?"true":"false", signbit(v));
     }
     /* underflow */
     {
         const char *s = "1e-9999";
         errno=0; char *end=NULL; double v=strtod(s,&end);
         size_t off = end ? (size_t)(end-s):0;
+        int err = errno;
         printf("\"underflow\":{\"input\":");
         print_esc(s);
         printf(",\"value\":%.17g,\"endptr_offset\":%zu,\"errno\":%d,\"is_zero\":%s,\"isfinite\":%s},\n",
-            v, off, errno, v==0.0?"true":"false", isfinite(v)?"true":"false");
+            v, off, err, v==0.0?"true":"false", isfinite(v)?"true":"false");
     }
     /* negative_zero */
     {
@@ -263,6 +300,120 @@ int main(void) {
             seps[0],seps[1],seps[2],
             count, consumed_all?"true":"false");
     }
+
+    /* bounded_probability */
+    {
+        const char *inputs[] = {"0","0.5","1","-0.001","1.001","nan","inf","0.5x",""};
+        printf("\"bounded_probability\":{\"cases\":[");
+        for (int i=0; i<9; i++) {
+            const char *s = inputs[i];
+            errno = 0; char *end=NULL; double v = strtod(s, &end);
+            int err = errno;
+            size_t len = strlen(s);
+            size_t off = end ? (size_t)(end - s) : 0;
+            int converted = off > 0;
+            int consumed_all = converted && off == len;
+            int range_ok = err != ERANGE;
+            int finite = isfinite(v);
+            int in_range = finite && v >= 0.0 && v <= 1.0;
+            int accepted = converted && consumed_all && range_ok && finite && in_range;
+            if (i) printf(",");
+            printf("{\"input\":");
+            print_esc(s);
+            printf(",\"value\":");
+            if (finite) printf("%.17g", v); else if (isnan(v)) printf("\"nan\""); else if (isinf(v)) printf("\"inf\""); else printf("null");
+            printf(",\"endptr_offset\":%zu,\"converted\":%s,\"consumed_all\":%s,\"errno\":%d,\"finite\":%s,\"accepted\":%s}",
+                off, converted?"true":"false", consumed_all?"true":"false", err, finite?"true":"false", accepted?"true":"false");
+        }
+        printf("]},\n");
+    }
+
+    /* quantization_scale_policy */
+    {
+        const char *inputs[] = {"0.0078125","1","0","-0.5","1.0001","nan","1e9999","0.01x"};
+        printf("\"quantization_scale_policy\":{\"cases\":[");
+        for (int i=0; i<8; i++) {
+            const char *s = inputs[i];
+            errno = 0; char *end=NULL; double v = strtod(s, &end);
+            int err = errno;
+            size_t len = strlen(s);
+            size_t off = end ? (size_t)(end - s) : 0;
+            int converted = off > 0;
+            int consumed_all = converted && off == len;
+            int range_ok = err != ERANGE;
+            int finite = isfinite(v);
+            int in_range = finite && v > 0.0 && v <= 1.0;
+            int accepted = converted && consumed_all && range_ok && finite && in_range;
+            if (i) printf(",");
+            printf("{\"input\":");
+            print_esc(s);
+            printf(",\"value\":");
+            if (finite) printf("%.17g", v); else if (isnan(v)) printf("\"nan\""); else if (isinf(v)) printf("\"inf\""); else printf("null");
+            printf(",\"endptr_offset\":%zu,\"converted\":%s,\"consumed_all\":%s,\"errno\":%d,\"finite\":%s,\"accepted\":%s}",
+                off, converted?"true":"false", consumed_all?"true":"false", err, finite?"true":"false", accepted?"true":"false");
+        }
+        printf("]},\n");
+    }
+
+    /* fixed_inference_config */
+    {
+        struct cfg_item { const char *name; const char *text; double min; double max; int min_inclusive; };
+        struct cfg_item valid[] = {
+            {"temperature", "0.8", 0.0, 2.0, 0},
+            {"feature_clip", "6.0", 0.0, 100.0, 1},
+            {"quant_scale", "0.0078125", 0.0, 1.0, 0}
+        };
+        struct cfg_item invalid[] = {
+            {"temperature", "nan", 0.0, 2.0, 0},
+            {"feature_clip", "6x", 0.0, 100.0, 1},
+            {"quant_scale", "0", 0.0, 1.0, 0}
+        };
+        printf("\"fixed_inference_config\":{\"valid\":[");
+        for (int i=0; i<3; i++) {
+            const char *s = valid[i].text;
+            errno=0; char *end=NULL; double v = strtod(s, &end);
+            int err = errno;
+            size_t len = strlen(s);
+            size_t off = end ? (size_t)(end - s) : 0;
+            int converted = off > 0;
+            int consumed_all = converted && off == len;
+            int finite = isfinite(v);
+            int low_ok = valid[i].min_inclusive ? (v >= valid[i].min) : (v > valid[i].min);
+            int high_ok = v <= valid[i].max;
+            int accepted = converted && consumed_all && err != ERANGE && finite && low_ok && high_ok;
+            if (i) printf(",");
+            printf("{\"name\":");
+            print_esc(valid[i].name);
+            printf(",\"input\":");
+            print_esc(s);
+            printf(",\"value\":%.17g,\"accepted\":%s}", v, accepted?"true":"false");
+        }
+        printf("],\"invalid\":[");
+        for (int i=0; i<3; i++) {
+            const char *s = invalid[i].text;
+            errno=0; char *end=NULL; double v = strtod(s, &end);
+            int err = errno;
+            size_t len = strlen(s);
+            size_t off = end ? (size_t)(end - s) : 0;
+            int converted = off > 0;
+            int consumed_all = converted && off == len;
+            int finite = isfinite(v);
+            int low_ok = invalid[i].min_inclusive ? (v >= invalid[i].min) : (v > invalid[i].min);
+            int high_ok = v <= invalid[i].max;
+            int accepted = converted && consumed_all && err != ERANGE && finite && low_ok && high_ok;
+            if (i) printf(",");
+            printf("{\"name\":");
+            print_esc(invalid[i].name);
+            printf(",\"input\":");
+            print_esc(s);
+            printf(",\"value\":");
+            if (finite) printf("%.17g", v); else printf("null");
+            printf(",\"accepted\":%s,\"converted\":%s,\"consumed_all\":%s,\"finite\":%s}",
+                accepted?"true":"false", converted?"true":"false", consumed_all?"true":"false", finite?"true":"false");
+        }
+        printf("]},\n");
+    }
+
     /* alternate locale probe */
     {
         const char *cands[] = {"de_DE.UTF-8","de_DE.utf8","fr_FR.UTF-8","fr_FR.utf8", NULL};
