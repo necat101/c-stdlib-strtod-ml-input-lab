@@ -1,0 +1,202 @@
+[
+  {
+    "id": "zig_compiler_marker",
+    "expectations": {
+      "inspect_toolchain": "pass",
+      "exercise_strtod": "not_applicable",
+      "check_parse_policy": "not_applicable",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "c_numeric_api_marker",
+    "expectations": {
+      "inspect_toolchain": "pass",
+      "exercise_strtod": "not_applicable",
+      "check_parse_policy": "not_applicable",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "no_conversion_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "expected_error",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "whitespace_and_sign_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "decimal_fraction_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "decimal_exponent_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "trailing_junk_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "expected_error",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "overflow_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "expected_error",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "underflow_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "negative_zero_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "infinity_token_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "expected_error",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "nan_token_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "expected_error",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "hexadecimal_float_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "c_locale_radix_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "snprintf_roundtrip_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "pass",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "not_applicable"
+    }
+  },
+  {
+    "id": "bounded_probability_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "not_applicable",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "pass",
+      "ml_context_observation": "context_only"
+    }
+  },
+  {
+    "id": "vector_token_sequence_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "not_applicable",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "pass",
+      "ml_context_observation": "context_only"
+    }
+  },
+  {
+    "id": "quantization_scale_policy_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "not_applicable",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "pass",
+      "ml_context_observation": "context_only"
+    }
+  },
+  {
+    "id": "fixed_inference_config_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "not_applicable",
+      "check_parse_policy": "pass",
+      "enumerate_ml_input_model": "pass",
+      "ml_context_observation": "context_only"
+    }
+  },
+  {
+    "id": "no_global_parse_or_ml_validity_claim_marker",
+    "expectations": {
+      "inspect_toolchain": "not_applicable",
+      "exercise_strtod": "not_applicable",
+      "check_parse_policy": "not_applicable",
+      "enumerate_ml_input_model": "not_applicable",
+      "ml_context_observation": "context_only"
+    }
+  }
+]

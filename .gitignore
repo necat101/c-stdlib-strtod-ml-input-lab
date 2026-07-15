@@ -1,0 +1,12 @@
+parse_lab
+parse_lab.exe
+parse_lab_check
+parse_lab_check.exe
+*.o
+*.obj
+zig-cache/
+.zig-cache/
+__pycache__/
+*.pyc
+tmp_*
+regenerated_*
